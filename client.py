@@ -1,5 +1,9 @@
 import argparse
 import ipaddress
+import requests
+import getpass
+import json
+import time
 
 
 parser = argparse.ArgumentParser()
@@ -28,3 +32,23 @@ if not(1024 < server["port"] < 65535):
 server["address"] = 'http://' + server["host"].compressed + ':' + str(server["port"])
 
 # Logic starts here... somewhere..
+
+print("-----------------------T W E E T C O O L-----------------------\n")
+
+while True:
+    r = requests.get(server['address'] + '/tweet')
+    for element in r.json():
+        print(('\nID:'), element['id'], ('\nPoster: '), element['poster'], ('\nContent: '), element['content'],
+              ('\nTimestamp: '), element['timestamp'])
+
+    # Choose an option: Tweet, refresh, exit
+    print('\n------------------M E N U------------------\n')
+    option = input('Tweet\nRefresh\nExit\nChoose an option: ')
+    if option == "exit":
+        exit()
+    elif option == "refresh":
+        continue
+    else:
+        name = input('Your name: ')
+        message = input('Your message: ')
+        r = requests.post(server['address'] + '/tweet', json={'poster': name, 'content': message})
